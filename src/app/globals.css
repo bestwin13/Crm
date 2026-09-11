@@ -1,0 +1,80 @@
+@import "tailwindcss";
+
+/* Enables class-based dark mode: add/remove `.dark` on <html> to switch
+   themes, instead of only following the OS-level color-scheme. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* Brand accents — constant across both themes */
+  --color-ink: #12213a;
+  --color-ink-2: #1b2e4d;
+  --color-slate: #4c6785;
+  --color-amber: #e2a33b;
+  --color-amber-dark: #c98826;
+  --color-danger: #c1462f;
+  --color-success: #2f8f5b;
+
+  /* Theme-aware surfaces — overridden inside .dark below */
+  --color-paper: #f6f7f9;
+  --color-surface: #ffffff;
+  --color-line: #e3e7ed;
+  --color-fg: #12213a;
+  --color-ink-soft: #5b6472;
+  --color-slate-light: #dce6f0;
+  --color-danger-soft: #fbe9e5;
+  --color-success-soft: #e7f4ed;
+
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-newsreader), ui-serif, Georgia, serif;
+}
+
+.dark {
+  --color-paper: #12141a;
+  --color-surface: #1a1d26;
+  --color-line: #2b2f3a;
+  --color-fg: #eef1f6;
+  --color-ink-soft: #9aa1b1;
+  --color-slate-light: #080c17;
+  --color-danger-soft: #3a201c;
+  --color-success-soft: #163524;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+html {
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+* {
+  border-color: var(--color-line);
+}
+
+::selection {
+  background-color: var(--color-amber);
+  color: var(--color-ink);
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

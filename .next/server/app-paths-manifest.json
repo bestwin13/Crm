@@ -1,0 +1,8 @@
+{
+  "/dashboard/contacts/page": "app/dashboard/contacts/page.js",
+  "/dashboard/leads/page": "app/dashboard/leads/page.js",
+  "/dashboard/leads/[id]/page": "app/dashboard/leads/[id]/page.js",
+  "/dashboard/contacts/[id]/page": "app/dashboard/contacts/[id]/page.js",
+  "/dashboard/leads/[id]/edit/page": "app/dashboard/leads/[id]/edit/page.js",
+  "/icon.png/route": "app/icon.png/route.js"
+}
