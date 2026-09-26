@@ -26,6 +26,7 @@ export default function RecordActionsMenu({
   const triggerRef = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
   const [position, setPosition] = useState({ top: 0, left: 0 });
+  const [openedFromContext, setOpenedFromContext] = useState(false);
 
   const positionFromRect = useCallback((rect: DOMRect) => {
     const menuWidth = 144;
@@ -56,7 +57,7 @@ export default function RecordActionsMenu({
     };
 
     const reposition = () => {
-      if (!triggerRef.current) return;
+      if (openedFromContext || !triggerRef.current) return;
       positionFromRect(triggerRef.current.getBoundingClientRect());
     };
 
@@ -70,10 +71,10 @@ export default function RecordActionsMenu({
       window.removeEventListener("scroll", reposition, true);
       window.removeEventListener("resize", reposition);
     };
-  }, [open, positionFromRect]);
+  }, [open, openedFromContext, positionFromRect]);
 
   useEffect(() => {
-    if (!recordId || !onSelect) return;
+    if (!recordId) return;
 
     const handleContextMenu = (event: MouseEvent) => {
       const target = event.target as HTMLElement | null;
@@ -82,18 +83,20 @@ export default function RecordActionsMenu({
 
       event.preventDefault();
       positionFromPoint(event.clientX, event.clientY);
+      setOpenedFromContext(true);
       setOpen(true);
     };
 
     document.addEventListener("contextmenu", handleContextMenu);
     return () => document.removeEventListener("contextmenu", handleContextMenu);
-  }, [recordId, onSelect, positionFromPoint]);
+  }, [recordId, positionFromPoint]);
 
   function toggle() {
     if (disabled) return;
     if (!open && triggerRef.current) {
       positionFromRect(triggerRef.current.getBoundingClientRect());
     }
+    setOpenedFromContext(false);
     setOpen((value) => !value);
   }
 
@@ -123,6 +126,7 @@ export default function RecordActionsMenu({
                   type="button"
                   onClick={() => {
                     setOpen(false);
+                    setOpenedFromContext(false);
                     onSelect();
                   }}
                   className="block w-full px-3 py-2 text-left text-sm text-fg hover:bg-paper"
@@ -135,9 +139,10 @@ export default function RecordActionsMenu({
                   type="button"
                   onClick={() => {
                     setOpen(false);
+                    setOpenedFromContext(false);
                     onConvert();
                   }}
-                  className="block w-full px-3 py-2 text-left text-sm font-medium text-slate hover:bg-slate-light"
+                  className="block w-full px-3 py-2 text-left text-sm text-fg hover:bg-paper"
                 >
                   Convert
                 </button>
@@ -146,6 +151,7 @@ export default function RecordActionsMenu({
                 type="button"
                 onClick={() => {
                   setOpen(false);
+                  setOpenedFromContext(false);
                   onEdit();
                 }}
                 className="block w-full px-3 py-2 text-left text-sm text-fg hover:bg-paper"
@@ -157,6 +163,7 @@ export default function RecordActionsMenu({
                 disabled={disabled}
                 onClick={() => {
                   setOpen(false);
+                  setOpenedFromContext(false);
                   onDelete();
                 }}
                 className="block w-full px-3 py-2 text-left text-sm text-danger hover:bg-danger-soft disabled:opacity-50"
