@@ -241,7 +241,10 @@ export default function RecordTimeline({ module, recordId, showLeadOrigin = fals
                   {dayEvents.map((event) => {
                     const { Icon, tone } = iconFor(event.event_type ?? event.type);
                     const changes = getChanges(event);
-                    const segments = highlightMessage(event.title, changes);
+                    const conversion = showLeadOrigin && isConversionEvent(event);
+                    const segments = conversion
+                      ? [{ text: `Lead converted to ${module === "accounts" ? "Account" : "Contact"}`, bold: true }]
+                      : highlightMessage(event.title, changes);
                     const actor = event.actor_name || event.user_name || event.user;
 
                     return (
@@ -256,23 +259,24 @@ export default function RecordTimeline({ module, recordId, showLeadOrigin = fals
 
                         <div className="min-w-0 flex-1 pt-0.5">
                           <p className="text-sm leading-relaxed text-fg">
+                            {conversion && <ArrowRightCircle size={15} className="mr-1.5 inline-block align-[-2px] text-slate" />}
                             {segments.map((segment, i) => (
                               <Fragment key={i}>
                                 {segment.bold ? <strong className="font-semibold">{segment.text}</strong> : segment.text}
                               </Fragment>
                             ))}
                           </p>
-                          {event.description && (
-                            <p className="mt-1 text-sm text-ink-soft">{event.description}</p>
-                          )}
                           {actor && (
                             <p className="mt-1 text-xs text-ink-soft">
                               by <span className="font-medium text-fg">{actor}</span>
                               {event.source ? ` · ${event.source}` : ""}
                             </p>
                           )}
+                          {event.description && !conversion && (
+                            <p className="mt-1 text-sm text-ink-soft">{event.description}</p>
+                          )}
 
-                          {showLeadOrigin && isConversionEvent(event) && (() => {
+                          {conversion && (() => {
                             const leadId = findLeadId(event.raw);
                             if (!leadId) return null;
                             const expanded = expandedLeadEvents.has(event.id);
@@ -286,7 +290,7 @@ export default function RecordTimeline({ module, recordId, showLeadOrigin = fals
                                     else next.add(event.id);
                                     return next;
                                   })}
-                                  className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-paper/60 px-2.5 py-1.5 text-xs font-semibold text-slate transition hover:bg-paper hover:text-fg"
+                                  className="mt-2 inline-flex items-center gap-1.5 rounded-md px-0 py-1 text-xs font-semibold text-slate transition hover:text-fg"
                                 >
                                   <ChevronDown size={13} className={`transition-transform ${expanded ? "rotate-180" : ""}`} />
                                   {expanded ? "Hide original lead timeline" : "View original lead timeline"}

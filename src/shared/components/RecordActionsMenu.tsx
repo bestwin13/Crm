@@ -2,12 +2,13 @@
 
 import { MoreVertical } from "lucide-react";
 import { createPortal } from "react-dom";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 interface RecordActionsMenuProps {
   onEdit: () => void;
   onDelete: () => void;
   onSelect?: () => void;
+  onConvert?: () => void;
   recordId?: string;
   deleteLabel?: string;
   disabled?: boolean;
@@ -17,6 +18,7 @@ export default function RecordActionsMenu({
   onEdit,
   onDelete,
   onSelect,
+  onConvert,
   recordId,
   deleteLabel = "Delete",
   disabled = false,
@@ -25,23 +27,25 @@ export default function RecordActionsMenu({
   const [open, setOpen] = useState(false);
   const [position, setPosition] = useState({ top: 0, left: 0 });
 
-  function positionFromRect(rect: DOMRect) {
+  const positionFromRect = useCallback((rect: DOMRect) => {
     const menuWidth = 144;
-    const menuHeight = onSelect ? 124 : 84;
+    const menuItems = 2 + (onSelect ? 1 : 0) + (onConvert ? 1 : 0);
+    const menuHeight = menuItems * 36 + 8;
     const left = Math.min(Math.max(8, rect.left), window.innerWidth - menuWidth - 8);
     const top = rect.bottom + menuHeight <= window.innerHeight
       ? rect.bottom + 4
       : rect.top - menuHeight - 4;
     setPosition({ top: Math.max(8, top), left });
-  }
+  }, [onSelect, onConvert]);
 
-  function positionFromPoint(x: number, y: number) {
+  const positionFromPoint = useCallback((x: number, y: number) => {
     const menuWidth = 144;
-    const menuHeight = onSelect ? 124 : 84;
+    const menuItems = 2 + (onSelect ? 1 : 0) + (onConvert ? 1 : 0);
+    const menuHeight = menuItems * 36 + 8;
     const left = Math.min(Math.max(8, x), window.innerWidth - menuWidth - 8);
     const top = y + menuHeight <= window.innerHeight ? y + 4 : y - menuHeight - 4;
     setPosition({ top: Math.max(8, top), left });
-  }
+  }, [onSelect, onConvert]);
 
   useEffect(() => {
     if (!open) return;
@@ -66,7 +70,7 @@ export default function RecordActionsMenu({
       window.removeEventListener("scroll", reposition, true);
       window.removeEventListener("resize", reposition);
     };
-  }, [open]);
+  }, [open, positionFromRect]);
 
   useEffect(() => {
     if (!recordId || !onSelect) return;
@@ -83,7 +87,7 @@ export default function RecordActionsMenu({
 
     document.addEventListener("contextmenu", handleContextMenu);
     return () => document.removeEventListener("contextmenu", handleContextMenu);
-  }, [recordId, onSelect]);
+  }, [recordId, onSelect, positionFromPoint]);
 
   function toggle() {
     if (disabled) return;
@@ -124,6 +128,18 @@ export default function RecordActionsMenu({
                   className="block w-full px-3 py-2 text-left text-sm text-fg hover:bg-paper"
                 >
                   Select
+                </button>
+              )}
+              {onConvert && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setOpen(false);
+                    onConvert();
+                  }}
+                  className="block w-full px-3 py-2 text-left text-sm font-medium text-slate hover:bg-slate-light"
+                >
+                  Convert
                 </button>
               )}
               <button

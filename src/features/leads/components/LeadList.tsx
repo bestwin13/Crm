@@ -249,6 +249,7 @@ export default function LeadList({
                         onEdit={() => router.push(`/dashboard/leads/${lead.id}/edit`)}
                         onDelete={() => handleDelete(lead)}
                         onSelect={() => setSelectionMode(true)}
+                        onConvert={() => router.push(`/dashboard/leads/${lead.id}/convert`)}
                         recordId={lead.id}
                         disabled={deletingId === lead.id}
                       />

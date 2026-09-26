@@ -151,14 +151,14 @@ export default function LeadForm({
   }
 
   function buildPayload(): CreateLeadPayload | null {
-    if (!form.name.trim() || !form.company_name.trim()) {
-      setError("Name and Company Name are required.");
+    if (!form.name.trim()) {
+      setError("Name is required.");
       return null;
     }
     setError(null);
     return {
       name: form.name.trim(),
-      company_name: form.company_name.trim(),
+      company_name: form.company_name.trim() || null,
       owner_id: form.owner_id,
       email: form.email.trim() || null,
       title: form.title.trim() || null,
@@ -278,7 +278,7 @@ export default function LeadForm({
             }}
           />
         </Field>
-        <Field label="Company" required>
+        <Field label="Company">
           <input
             value={form.company_name}
             onChange={(e) => update("company_name", e.target.value)}

@@ -14,6 +14,7 @@ import type {
   UpdateMeetingPayload,
 } from "@/features/meetings/types/meeting.types";
 import { confirmDelete } from "@/shared/utils/confirmDelete";
+import RecordTimeline from "@/shared/components/RecordTimeline";
 
 interface Props {
   meeting: Meeting;
@@ -201,6 +202,8 @@ export default function MeetingDetail({ meeting, onMeetingChange }: Props) {
           />
         </div>
       </div>
+
+      <RecordTimeline module="meetings" recordId={meeting.id} />
 
       <Modal isOpen={editing} onClose={() => setEditing(false)}>
         <MeetingForm

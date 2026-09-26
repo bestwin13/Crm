@@ -236,7 +236,7 @@ export default function TaskList({
       ) : (
         <>
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[820px] text-left text-sm">
+            <table className="w-full min-w-[820px] border-separate border-spacing-0 text-left text-sm">
               <thead>
                 <tr className="border-b border-line text-xs font-semibold uppercase tracking-wide text-ink-soft">
                   <th className="w-10 px-4 py-3" aria-label="Selection and actions">
@@ -258,7 +258,7 @@ export default function TaskList({
                   <th className="px-4 py-3">Owner</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-line">
                 {pageItems.map((task) => (
                   <tr
                     key={task.id}
@@ -276,7 +276,7 @@ export default function TaskList({
                     }}
                     onDoubleClick={() => { if (!selectionMode) onOpenClick(task); }}
                     title="Double-click to open task details"
-                    className="group cursor-pointer border-b border-line last:border-0 hover:bg-paper hover:shadow-[inset_2px_0_0_var(--color-amber)]"
+                    className="group cursor-pointer hover:bg-paper hover:shadow-[inset_2px_0_0_var(--color-amber)]"
                   >
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">

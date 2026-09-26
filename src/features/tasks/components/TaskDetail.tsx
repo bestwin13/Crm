@@ -9,6 +9,7 @@ import { TaskService } from "@/features/tasks/services/TaskService";
 import { TASK_PRIORITIES, TASK_STATUSES, type Task, type TaskPriority, type TaskStatus } from "@/features/tasks/types/task.types";
 
 import { confirmDelete } from "@/shared/utils/confirmDelete";
+import RecordTimeline from "@/shared/components/RecordTimeline";
 
 interface Props { task: Task; onTaskChange: (task: Task) => void; }
 
@@ -92,6 +93,8 @@ export default function TaskDetail({ task, onTaskChange }: Props) {
           <Row label="Updated At" value={task.updated_at ? new Date(task.updated_at).toLocaleString() : null} editable={false}/>
         </div>
       </div>
+
+      <RecordTimeline module="tasks" recordId={task.id} />
     </div>
   );
 }

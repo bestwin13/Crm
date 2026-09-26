@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ChevronDown, X } from "lucide-react";
+import { ChevronDown, Plus, X } from "lucide-react";
 
 export interface RecordPickerOption {
   id: string;
@@ -17,6 +17,8 @@ interface RecordPickerProps {
   placeholder?: string;
   emptyOptionLabel?: string;
   menuClassName?: string;
+  onCreate?: () => void;
+  createLabel?: string;
 }
 
 /**
@@ -32,6 +34,8 @@ export default function RecordPicker({
   placeholder = "Select…",
   emptyOptionLabel = "-None-",
   menuClassName = "w-full",
+  onCreate,
+  createLabel = "Create Account",
 }: RecordPickerProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -86,6 +90,22 @@ export default function RecordPicker({
             />
           </div>
           <ul className="max-h-56 overflow-y-auto py-1">
+            {onCreate && (
+              <li className="border-b border-line pb-1">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsOpen(false);
+                    setQuery("");
+                    onCreate();
+                  }}
+                  className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm font-semibold text-slate hover:bg-slate-light"
+                >
+                  <Plus size={14} />
+                  {createLabel}
+                </button>
+              </li>
+            )}
             <li>
               <button
                 type="button"
