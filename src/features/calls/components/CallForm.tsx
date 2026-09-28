@@ -150,7 +150,7 @@ export default function CallForm({ mode, initialCall, onSubmit, onCancel }: Call
         <h2 className="font-serif text-xl text-fg">{mode === "create" ? "Log a Call" : "Edit Call"}</h2>
       </div>
 
-      <div className="max-h-[70vh] overflow-y-auto px-6 py-5">
+      <div className="px-6 py-5">
         {error && (
           <p className="mb-4 animate-shake rounded-md border border-danger/30 bg-danger-soft px-3 py-2 text-sm text-danger">
             {error}
